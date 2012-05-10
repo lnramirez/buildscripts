@@ -2,8 +2,13 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'maven'
 
+    
 //tasks
-task createDirSources << {
+task createDirSources {
+    description = 'Create conventional web application directory sources if they do not exist'
+    doFirst {
+
+
     sourceSets.all {
         (java.srcDirs + resources.srcDirs + webAppDir).each { _srcDir ->
             if (!_srcDir.exists()) {
@@ -12,13 +17,17 @@ task createDirSources << {
             }
         }
     }
+    }
 }
 
 //maven 
-task copyPomFiles (dependsOn: 'install') << {
+task copyPomFiles (dependsOn: 'install') {
+    description = 'Copies POM files to project root directory, this is helpful to leverage IDEs that have Maven integration but lack a gradle one'
+    doFirst {
     println "copying build/poms/pom-default.xml to pom.xml"
     ant.copy(file: "build/poms/pom-default.xml", tofile: "pom.xml")
     println "copied"
+    }
 }
 
 optionalDeps = []
